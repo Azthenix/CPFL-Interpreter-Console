@@ -4,5 +4,6 @@ public enum TokenType
     IDENTIFIER,
     CONSTANT,
     SYMBOL,
+    EXPRESSION,
     NEWLINE
 }

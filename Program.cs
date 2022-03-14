@@ -7,12 +7,12 @@ namespace CPFL_Interpreter_Console
 	{
 		static void Main(string[] args)
 		{
-			if(args.Length == 0)
-			{
-				Console.WriteLine("Please specifiy file");
-				return;
-			}
-			Interpreter inter = new Interpreter(args[0]);
+			// if(args.Length == 0)
+			// {
+			// 	Console.WriteLine("Please specifiy file");
+			// 	return;
+			// }
+			Interpreter inter = new Interpreter("test.cpfl");
 			inter.Run();
 		}
 	}
