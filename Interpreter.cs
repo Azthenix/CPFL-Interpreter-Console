@@ -12,8 +12,6 @@ namespace CPFL_Interpreter_Console
 		List<Token> tokenList;
 		List<string> tokenLiterals;
 
-		Node root;
-
 		int[,] DeclareDFA = new int[7,7]{
 			{1, -1, -1, -1, -1, -1, -1},
 			{-1, 2, -1, -1, -1, -1, -1},
@@ -62,7 +60,6 @@ namespace CPFL_Interpreter_Console
 
 			tokenList = new List<Token>();
 			tokenLiterals = new List<string>();
-			root = new Node(null, null);
 
 			lines = File.ReadAllText(file)
 			.Replace("\"TRUE\"", "TRUE")
@@ -88,13 +85,6 @@ namespace CPFL_Interpreter_Console
 		{
 			Parse();
 			Interpret();
-			//ASTGenerator();
-			// foreach(Token token in tokenList)
-			// {
-			// 	Console.WriteLine(token.lex == Lexeme.CONSTANT ? token.literal : token.lex);
-			// }
-
-			//TraverseAST(root.right);
 		}
 
 		void Parse()
@@ -321,230 +311,6 @@ namespace CPFL_Interpreter_Console
 			throw new ErrorException($"Illegal Identifier '{literal}' on line {ctr}.");
 		}
 
-		void Tokenize()
-		{
-			int ctr = 1;
-			foreach(string lit in tokenLiterals)
-			{
-				if(reserved.Contains(lit))
-				{
-					tokenList.Add(new Token(Enum.Parse<Lexeme>(lit), null, ctr));
-				}
-				else if(symbols.Contains(lit))
-				{
-					switch(lit)
-					{
-						case "(":
-							tokenList.Add(new Token(Lexeme.LPAR, null, ctr));
-							break;
-						case ")":
-							tokenList.Add(new Token(Lexeme.RPAR, null, ctr));
-							break;
-						case "[":
-							tokenList.Add(new Token(Lexeme.LBRACK, null, ctr));
-							break;
-						case "]":
-							tokenList.Add(new Token(Lexeme.RBRACK, null, ctr));
-							break;
-						case "*":
-							tokenList.Add(new Token(Lexeme.AST, null, ctr));
-							break;
-						case "/":
-							tokenList.Add(new Token(Lexeme.FSLASH, null, ctr));
-							break;
-						case "+":
-							tokenList.Add(new Token(Lexeme.PLUS, null, ctr));
-							break;
-						case "-":
-							tokenList.Add(new Token(Lexeme.MINUS, null, ctr));
-							break;
-						case "%":
-							tokenList.Add(new Token(Lexeme.PERCENT, null, ctr));
-							break;
-						case "&":
-							tokenList.Add(new Token(Lexeme.AMP, null, ctr));
-							break;
-						case ">":
-							tokenList.Add(new Token(Lexeme.GREATER, null, ctr));
-							break;
-						case "<":
-							tokenList.Add(new Token(Lexeme.LESSER, null, ctr));
-							break;
-						case "=":
-							tokenList.Add(new Token(Lexeme.LPAR, null, ctr));
-							break;
-						case ">=":
-							tokenList.Add(new Token(Lexeme.LPAR, null, ctr));
-							break;
-						case "<=":
-							tokenList.Add(new Token(Lexeme.LPAR, null, ctr));
-							break;
-						case "==":
-							tokenList.Add(new Token(Lexeme.LPAR, null, ctr));
-							break;
-						case ",":
-							tokenList.Add(new Token(Lexeme.LPAR, null, ctr));
-							break;
-						case "#":
-							tokenList.Add(new Token(Lexeme.LPAR, null, ctr));
-							break;
-						case ":":
-							tokenList.Add(new Token(Lexeme.LPAR, null, ctr));
-							break;
-						case "\"":
-							tokenList.Add(new Token(Lexeme.LPAR, null, ctr));
-							break;
-						default:
-							tokenList.Add(new Token(Lexeme.LPAR, null, ctr));
-							break;
-					}
-				}
-			}
-		}
-		void ASTGenerator()
-		{
-			List<Token> tks = new List<Token>();
-			tks.AddRange(tokenList);
-			Node currNode = root;
-
-			while(tks.Count > 0)
-			{
-				switch(tks[0].lex)
-				{
-					case Lexeme.VAR:
-
-						while(tks[0].lex != Lexeme.NEWLINE)
-						{
-							switch(tks[0].lex)
-							{
-								case Lexeme.VAR:
-								case Lexeme.AS:
-								case Lexeme.STRING:
-								case Lexeme.NUMBER:
-								case Lexeme.CHARACTER:
-								case Lexeme.BOOLEAN:
-									currNode.right = new Node(currNode, tks[0]);
-									currNode = currNode.right;
-									break;
-								case Lexeme.ASSIGN:
-								case Lexeme.IDENTIFIER:
-									currNode.left = new Node(currNode, tks[0]);
-									currNode = currNode.left;
-									break;
-								case Lexeme.COMMA:
-									while(currNode.token.lex != Lexeme.IDENTIFIER)
-									{
-										currNode = currNode.parent;
-									}
-									currNode.right = new Node(currNode, tks[0]);
-									currNode = currNode.right;
-									break;
-								case Lexeme.INT:
-								case Lexeme.FLOAT:
-								case Lexeme.CHAR:
-								case Lexeme.BOOL:
-									while(currNode.token.lex != Lexeme.VAR)
-									{
-										if(currNode is null)
-											throw new ErrorException($"Illegal '{tks[0].lex}' on line {tks[0].line}.");
-										
-										currNode = currNode.parent;
-									}
-									if(currNode.right is not null)
-										throw new ErrorException($"Illegal '{tks[0].lex}' on line {tks[0].line}.");
-									
-									currNode.right = new Node(currNode, tks[0]);
-									currNode = currNode.right;
-									break;
-								case Lexeme.NEWLINE:
-									currNode.left = new Node(currNode, tks[0]);
-									currNode = currNode.left;
-									break;
-								default:
-									throw new ErrorException($"Illegal '{tks[0].lex}' on line {tks[0].line}.");
-							}
-
-							tks.RemoveAt(0);
-						}
-
-						//Console.WriteLine(sequences[^1].right.displayNode());
-						break;
-					case Lexeme.START:
-						currNode.right = new Node(currNode, tks[0]);
-						currNode = currNode.right;
-						tks.RemoveAt(0);
-
-						while(tks.Count > 0)
-						{
-							switch(tks[0].lex)
-							{
-								case Lexeme.START:
-								case Lexeme.WHILE:
-								case Lexeme.IF:
-								case Lexeme.STRING:
-								case Lexeme.NUMBER:
-								case Lexeme.AMP:
-								case Lexeme.CHARACTER:
-								case Lexeme.OUTPUT:
-								case Lexeme.INPUT:
-									currNode.left = new Node(currNode, tks[0]);
-									currNode = currNode.left;
-									break;
-								case Lexeme.ELSE:
-									while(currNode.token.lex != Lexeme.IF)
-									{
-										currNode = currNode.parent;
-									}
-									currNode.right = new Node(currNode, tks[0]);
-									currNode = currNode.right;
-									break;
-								case Lexeme.STOP:
-									while(currNode.token.lex != Lexeme.START || currNode.right is not null)
-									{
-										currNode = currNode.parent;
-									}
-									currNode.right = new Node(currNode, tks[0]);
-									currNode = currNode.right;
-									break;
-								case Lexeme.ASSIGN:
-								case Lexeme.IDENTIFIER:
-								case Lexeme.LPAR:
-								case Lexeme.RPAR:
-								case Lexeme.AST:
-								case Lexeme.FSLASH:
-								case Lexeme.PLUS:
-								case Lexeme.MINUS:
-								case Lexeme.PERCENT:
-								case Lexeme.GREATER:
-								case Lexeme.LESSER:
-								case Lexeme.GEQUAL:
-								case Lexeme.LEQUAL:
-								case Lexeme.NEQUAL:
-									currNode.left = new Node(currNode, tks[0]);
-									currNode = currNode.left;
-									break;
-								case Lexeme.NEWLINE:
-									currNode.left = new Node(currNode, tks[0]);
-									currNode = currNode.left;
-									break;
-								default:
-									Console.WriteLine($"{tks[0].lex} {tks[1].lex} {tks[2].lex}.");
-									throw new ErrorException($"Illegal '{tks[0].lex}' on line {tks[0].line}.");
-							}
-
-							tks.RemoveAt(0);
-						}
-
-						break;
-					case Lexeme.NEWLINE:
-						tks.RemoveAt(0);
-						break;
-					default:
-						throw new ErrorException($"Illegal {tks[0].lex} on line {tks[0].line}.");
-				}
-			}
-		}
-
 		void Interpret()
 		{
 			List<Token> tks = new List<Token>(tokenList);
@@ -601,7 +367,7 @@ namespace CPFL_Interpreter_Console
 						return;
 					case Lexeme.OUTPUT:
 						checkOutput(x);
-						Outut(x, ref x);
+						Output(x, ref x);
 						break;
 					case Lexeme.NEWLINE:
 						break;
@@ -872,7 +638,7 @@ namespace CPFL_Interpreter_Console
 			return 'b';
 		}
 
-		void Outut(int index, ref int y)
+		void Output(int index, ref int y)
 		{
 			int x = index + 2;
 
@@ -1006,17 +772,6 @@ namespace CPFL_Interpreter_Console
 			}
 		}
 
-		// void assignTo(string name, Token tk)
-		// {
-		// 	Type t = variables[name];
-
-		// 	switch(t)
-		// 	{
-		// 		case float.GetType():
-		// 			break;
-		// 	}
-		// }
-
 		void checkDeclare(int index)
 		{
 			int state = 0;
@@ -1065,17 +820,6 @@ namespace CPFL_Interpreter_Console
 
 				x++;
 			}
-		}
-
-		public bool CheckChars(string str, string cmp)
-		{
-			foreach(char c in str)
-			{
-				if(cmp.Contains(c))
-					return true;
-			}
-
-			return false;
 		}
 	}
 }
