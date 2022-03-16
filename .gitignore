@@ -1,0 +1,10 @@
+
+.vscode/launch.json
+bin/Debug/net5.0/CPFL-Interpreter-Console.dll
+bin/Debug/net5.0/CPFL-Interpreter-Console.pdb
+bin/Debug/net5.0/ref/CPFL-Interpreter-Console.dll
+obj/Debug/net5.0/CPFL-Interpreter-Console.assets.cache
+obj/Debug/net5.0/CPFL-Interpreter-Console.dll
+obj/Debug/net5.0/CPFL-Interpreter-Console.GeneratedMSBuildEditorConfig.editorconfig
+obj/Debug/net5.0/CPFL-Interpreter-Console.pdb
+obj/Debug/net5.0/ref/CPFL-Interpreter-Console.dll

@@ -14,6 +14,7 @@ namespace CPFL_Interpreter_Console
 			// }
 			Interpreter inter = new Interpreter("test.cpfl");
 			inter.Run();
+			Console.ReadKey();
 		}
 	}
 }

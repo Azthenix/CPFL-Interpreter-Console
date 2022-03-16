@@ -1,0 +1,11 @@
+VAR
+	COMMA
+		COMMA
+		    IDENTIFIER
+				    INT
+				AS
+			    NUMBER
+			ASSIGN
+	    IDENTIFIER
+    IDENTIFIER
+
