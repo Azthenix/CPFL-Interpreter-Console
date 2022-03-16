@@ -1,3 +1,8 @@
-VAR abc, b, c=2.50 AS FLOAT
-VAR x, w_23='w' AS CHAR
-VAR t="TRUE" AS BOOL
+VAR res, x = 10, y = 20, z = 30 AS INT
+VAR result, f = 1.5 AS FLOAT
+
+START
+    res = ( x + y) * z
+    result = (f * 10)
+    OUTPUT: res & "#" & result & "#"
+STOP

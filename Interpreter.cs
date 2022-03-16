@@ -24,6 +24,13 @@ namespace CPFL_Interpreter_Console
 			{-1, -1, -1, -1, -1, -1, -1}
 		};
 
+		int[,] outputDFA = new int[4,4]{
+			{1, -1, -1, -1},
+			{-1, 2, -1, -1},
+			{-1, -1, 3, -1},
+			{-1, -1, -1, 2}
+		};
+
 		enum bType
 		{
 			INT,
@@ -61,7 +68,8 @@ namespace CPFL_Interpreter_Console
 			.Replace("\"TRUE\"", "TRUE")
 			.Replace("\"FALSE\"", "FALSE")
 			.Replace("[\"]", "$DQUOTE$")
-			.Split(new char[]{'\n', '\r'});
+			.Replace("\r", "")
+			.Split('\n');
 
 			for(int x = 0; x < lines.Length; x++)
 			{
@@ -69,7 +77,7 @@ namespace CPFL_Interpreter_Console
 
 				for(int y = 1; y < dqsplit.Length; y += 2)
 				{
-					dqsplit[y] = dqsplit[y].Replace("[[]", "$LBRACKET$").Replace("[]]", "$BRACKET$").Replace("[#]", "$SHARP$");
+					dqsplit[y] = dqsplit[y].Replace("[[]", "$LBRACKET$").Replace("[]]", "$RBRACKET$").Replace("[#]", "$SHARP$");
 				}
 
 				lines[x] = String.Join('\"', dqsplit);
@@ -191,6 +199,9 @@ namespace CPFL_Interpreter_Console
 								case ',':
 									tokenList.Add(new Token(Lexeme.COMMA, null, ctr));
 									break;
+								case ':':
+									tokenList.Add(new Token(Lexeme.COLON, null, ctr));
+									break;
 								case '\"':
 									lit.Clear();
 									try
@@ -268,7 +279,7 @@ namespace CPFL_Interpreter_Console
 					addToken(lit.ToString(), ctr);
 				
 				tokenList.Add(new Token(Lexeme.NEWLINE, null, ctr));
-				ctr++;
+				ctr += 1;
 			}
 		}
 
@@ -534,102 +545,13 @@ namespace CPFL_Interpreter_Console
 			}
 		}
 
-		// void ParseExecution(List<Token> tks)
-		// {
-		// 	while(tks[0].lex != Lexeme.STOP)
-		// 	{
-		// 		sequences.Add(new Node(null, null));
-		// 		Node currNode = sequences[^1];
-
-		// 		while(tks[0].lex != Lexeme.NEWLINE)
-		// 		{
-		// 			switch(tks[0].lex)
-		// 			{
-		// 				case Lexeme.VAR:
-		// 				case Lexeme.AS:
-		// 				case Lexeme.STRING:
-		// 				case Lexeme.NUMBER:
-		// 				case Lexeme.CHARACTER:
-		// 				case Lexeme.BOOLEAN:
-		// 					currNode.right = new Node(currNode, tks[0]);
-		// 					currNode = currNode.right;
-		// 					break;
-		// 				case Lexeme.IDENTIFIER:
-		// 					currNode.left = new Node(currNode, tks[0]);
-		// 					currNode = currNode.left;
-		// 					break;
-		// 				case Lexeme.ASSIGN:
-		// 					currNode.left = new Node(currNode, tks[0]);
-		// 					currNode = currNode.left;
-		// 					break;
-		// 				case Lexeme.COMMA:
-		// 					while(currNode.token.lex != Lexeme.IDENTIFIER)
-		// 					{
-		// 						currNode = currNode.parent;
-		// 					}
-		// 					currNode.right = new Node(currNode, tks[0]);
-		// 					currNode = currNode.right;
-		// 					break;
-		// 				case Lexeme.INT:
-		// 				case Lexeme.FLOAT:
-		// 				case Lexeme.CHAR:
-		// 				case Lexeme.BOOL:
-		// 					while(currNode.token.lex != Lexeme.VAR)
-		// 					{
-		// 						if(currNode is null)
-		// 							throw new ErrorException($"Illegal '{tks[0].lex}' on line {tks[0].line}.");
-								
-		// 						currNode = currNode.parent;
-		// 					}
-		// 					if(currNode.right is not null)
-		// 						throw new ErrorException($"Illegal '{tks[0].lex}' on line {tks[0].line}.");
-							
-		// 					currNode.right = new Node(currNode, tks[0]);
-		// 					currNode = currNode.right;
-		// 					break;
-		// 				case Lexeme.START:
-
-		// 					break;
-		// 				default:
-		// 					throw new ErrorException($"Illegal '{tks[0].lex}' on line {tks[0].line}.");
-		// 	}
-
-		// 				while(tks[0].lex != )
-		// 				currNode.left = new Node(currNode, token);
-		// 				while(currNode.token.lex != Lexeme.START)
-		// 				{
-		// 					currNode = currNode.parent;
-
-		// 					if(currNode is not null)
-		// 						throw new ErrorException($"Illegal 'STOP' on line {token.line}.");
-							
-		// 				}
-		// 				currNode = currNode.parent;
-		// }
-
-		// void TraverseAST(Node node)
-		// {
-		// 	if(node.left != null)
-		// 		TraverseAST(node.left);
-			
-		// 	switch(node.token.lex)
-		// 	{
-		// 		case Lexeme.VAR:
-		// 			Console.WriteLine(Declare(node.left));
-		// 			break;
-		// 	}
-
-		// 	if(node.right != null)
-		// 		TraverseAST(node.right);
-		// }
-
 		void Interpret()
 		{
 			List<Token> tks = new List<Token>(tokenList);
 
 			for(int x = 0; x < tks.Count; x++)
 			{
-				switch(tks[0].lex)
+				switch(tks[x].lex)
 				{
 					case Lexeme.VAR:
 						checkDeclare(x);
@@ -641,7 +563,7 @@ namespace CPFL_Interpreter_Console
 					case Lexeme.NEWLINE:
 						break;
 					default:
-						throw new ErrorException($"Illegal '{tks[0].lex}' on line {tks[0].line}.");
+						throw new ErrorException($"Illegal '{tks[x].lex}' on line {tks[x].line}.");
 				}
 			}
 		}
@@ -649,14 +571,14 @@ namespace CPFL_Interpreter_Console
 		void executeBody(int index, ref int y)
 		{
 			int x = index;
-			for(; x < tokenList.Count; x++)
+			for(x = x+1; x < tokenList.Count; x++)
 			{
 				switch(tokenList[x].lex)
 				{
 					case Lexeme.IDENTIFIER:
 						if(tokenList[x+1].lex != Lexeme.ASSIGN)
 						{
-							throw new ErrorException($"Illegal '{tokenList[0].lex}' on line {tokenList[0].line}.");
+							throw new ErrorException($"Illegal '{tokenList[x].lex}' on line {tokenList[x].line}.");
 						}
 
 						switch(variables[tokenList[x].literal])
@@ -675,11 +597,16 @@ namespace CPFL_Interpreter_Console
 						executeBody(x, ref x);
 						break;
 					case Lexeme.STOP:
+						y = x;
 						return;
+					case Lexeme.OUTPUT:
+						checkOutput(x);
+						Outut(x, ref x);
+						break;
 					case Lexeme.NEWLINE:
 						break;
 					default:
-						throw new ErrorException($"Illegal '{tokenList[0].lex}' on line {tokenList[0].line}.");
+						throw new ErrorException($"Illegal '{tokenList[x].lex}' on line {tokenList[x].line}.");
 				}
 			}
 		}
@@ -735,57 +662,35 @@ namespace CPFL_Interpreter_Console
 			}
 		}
 
-		float evaluateNum(int index, ref int y)
-		{
-			// int x = y;
-			// while(tokenList[x].lex != Lexeme.NEWLINE)
-			// {
-			// 	switch(tokenList[x].lex)
-			// 	{
-			// 		case Lexeme.INT:
-
-			// 			t = bType.INT;
-			// 			break;
-			// 		case Lexeme.FLOAT:
-			// 			t = bType.FLOAT;
-			// 			break;
-			// 		case Lexeme.CHAR:
-			// 			t = bType.CHAR;
-			// 			break;
-			// 		case Lexeme.BOOL:
-			// 		case Lexeme.IDEN:
-
-			// 			t = bType.BOOL;
-			// 			break;
-			// 	}
-
-			// 	x++;
-			// }
-			return 0;
-		}
-		int evaluateFloat(int index, ref int x)
-		{
-			return 0;
-		}
-		int evaluateChar(int index, ref int x)
-		{
-			return 0;
-		}
-		int evaluateBool(int index, ref int x)
-		{
-			return 0;
-		}
-
-		void assignToNum(int index, ref int y)
+		float assignToNum(int index, ref int y)
 		{
 			int x = index;
+			float res;
 
 			x += 2;
 
-			if(tokenList[x].lex == Lexeme.IDENTIFIER && tokenList[x+1].lex == Lexeme.ASSIGN)
+			if(tokenList[x+1].lex == Lexeme.ASSIGN)
 			{
-				float res = evaluateNum(x, ref x);
-				assignToNum(x,  ref x);
+				if(tokenList[x].lex == Lexeme.IDENTIFIER)
+				{
+					res = assignToNum(x,  ref x);
+					
+					switch(variables[tokenList[index].literal])
+					{
+						case bType.INT:
+							intVars[tokenList[index].literal] = Convert.ToInt32(res);
+							break;
+						case bType.FLOAT:
+							floatVars[tokenList[index].literal] = res;
+							break;
+						default:
+							throw new ErrorException($"Illegal IDENTIFIER '{tokenList[x].literal}' on line {tokenList[x].line}.");
+					}
+
+					y = x;
+
+					return res;
+				}
 			}
 
 			StringBuilder sb = new StringBuilder();
@@ -795,24 +700,261 @@ namespace CPFL_Interpreter_Console
 				switch(tokenList[x].lex)
 				{
 					case Lexeme.IDENTIFIER:
-						// switch
-						// sb.Append()
+						try
+						{
+							switch(variables[tokenList[x].literal])
+							{
+								case bType.INT:
+									sb.Append(intVars[tokenList[x].literal]);
+									break;
+								case bType.FLOAT:
+									sb.Append(floatVars[tokenList[x].literal]);
+									break;
+								default:
+									throw new ErrorException($"Illegal IDENTIFIER '{tokenList[x].literal}' on line {tokenList[x].line}.");
+							}
+						}
+						catch(KeyNotFoundException)
+						{
+							throw new ErrorException($"Use of unassigned variable '{tokenList[x].literal}' on line {tokenList[x].line}.");
+						}
 						break;
-					case Lexeme.INT:
-					case Lexeme.FLOAT:
-						executeBody(x, ref x);
+					case Lexeme.NUMBER:
+						sb.Append(tokenList[x].literal);
+						break;
+					case Lexeme.LPAR:
+						sb.Append('(');
+						break;
+					case Lexeme.RPAR:
+						sb.Append(')');
+						break;
+					case Lexeme.AST:
+						sb.Append('*');
+						break;
+					case Lexeme.FSLASH:
+						sb.Append('/');
+						break;
+					case Lexeme.PLUS:
+						sb.Append('+');
+						break;
+					case Lexeme.MINUS:
+						sb.Append('-');
+						break;
+					case Lexeme.PERCENT:
+						sb.Append('%');
 						break;
 					default:
-						throw new ErrorException($"Illegal '{tokenList[0].lex}' on line {tokenList[0].line}.");
+						throw new ErrorException($"Illegal '{tokenList[x].lex}' on line {tokenList[x].line}.");
+				}
+				x++;
+			}
+
+			y = x;
+
+			DataTable dt = new DataTable();
+			
+			res = Convert.ToSingle(dt.Compute(sb.ToString(), ""));
+
+			switch(variables[tokenList[index].literal])
+			{
+				case bType.INT:
+					intVars[tokenList[index].literal] = Convert.ToInt32(dt.Compute(sb.ToString(), ""));
+					break;
+				case bType.FLOAT:
+					floatVars[tokenList[index].literal] = Convert.ToSingle(dt.Compute(sb.ToString(), ""));
+					break;
+			}
+
+			return res;
+		}
+
+		char assignToChar(int index, ref int y)
+		{
+			int x = index;
+			char res;
+
+			x += 2;
+
+			if(tokenList[x+1].lex == Lexeme.ASSIGN)
+			{
+				if(tokenList[x].lex == Lexeme.IDENTIFIER)
+				{
+					res = assignToChar(x,  ref x);
+					
+					switch(variables[tokenList[index].literal])
+					{
+						case bType.INT:
+							intVars[tokenList[index].literal] = Convert.ToInt32(res);
+							break;
+						case bType.FLOAT:
+							floatVars[tokenList[index].literal] = res;
+							break;
+					}
+
+					y = x;
+
+					return res;
 				}
 			}
 
-			switch(variables[tokenList[x].literal])
+			StringBuilder sb = new StringBuilder();
+
+			while(tokenList[x].lex != Lexeme.NEWLINE)
 			{
-				case bType.INT:
-					break;
-				case bType.FLOAT:
-					break;
+				switch(tokenList[x].lex)
+				{
+					case Lexeme.IDENTIFIER:
+						try
+						{
+							switch(variables[tokenList[x].literal])
+							{
+								case bType.INT:
+									sb.Append(intVars[tokenList[x].literal]);
+									break;
+								case bType.FLOAT:
+									sb.Append(floatVars[tokenList[x].literal]);
+									break;
+								default:
+									throw new ErrorException($"Illegal IDENTIFIER '{tokenList[x].literal}' on line {tokenList[x].line}.");
+							}
+						}
+						catch(KeyNotFoundException)
+						{
+							throw new ErrorException($"Use of unassigned variable '{tokenList[x].literal}' on line {tokenList[x].line}.");
+						}
+						break;
+					case Lexeme.NUMBER:
+						sb.Append(tokenList[x].literal);
+						break;
+					case Lexeme.LPAR:
+						sb.Append('(');
+						break;
+					case Lexeme.RPAR:
+						sb.Append(')');
+						break;
+					case Lexeme.AST:
+						sb.Append('*');
+						break;
+					case Lexeme.FSLASH:
+						sb.Append('/');
+						break;
+					case Lexeme.PLUS:
+						sb.Append('+');
+						break;
+					case Lexeme.MINUS:
+						sb.Append('-');
+						break;
+					case Lexeme.PERCENT:
+						sb.Append('%');
+						break;
+					default:
+						throw new ErrorException($"Illegal '{tokenList[x].lex}' on line {tokenList[x].line}.");
+				}
+				x++;
+			}
+
+			y = x;
+
+			// DataTable dt = new DataTable();
+			
+			// res = Convert.ToSingle(dt.Compute(sb.ToString(), ""));
+
+			// switch(variables[tokenList[index].literal])
+			// {
+			// 	case bType.INT:
+			// 		intVars[tokenList[index].literal] = Convert.ToInt32(dt.Compute(sb.ToString(), ""));
+			// 		break;
+			// 	case bType.FLOAT:
+			// 		floatVars[tokenList[index].literal] = Convert.ToSingle(dt.Compute(sb.ToString(), ""));
+			// 		break;
+			// }
+
+			return 'b';
+		}
+
+		void Outut(int index, ref int y)
+		{
+			int x = index + 2;
+
+			StringBuilder sb = new StringBuilder();
+
+			while(tokenList[x].lex != Lexeme.NEWLINE)
+			{
+				switch(tokenList[x].lex)
+				{
+					case Lexeme.STRING:
+						sb.Append(tokenList[x].literal.Replace("$DQUOTE$", "\"").Replace("$LBRACKET$", "[").Replace("$RBRACKET$", "]").Replace("#", "\n").Replace("$SHARP$", "#"));
+						break;
+					case Lexeme.NUMBER:
+					case Lexeme.CHARACTER:
+					case Lexeme.BOOLEAN:
+						sb.Append(tokenList[x].literal);
+						break;
+					case Lexeme.IDENTIFIER:
+						switch(variables[tokenList[x].literal])
+						{
+							case bType.INT:
+								sb.Append(intVars[tokenList[x].literal]);
+								break;
+							case bType.FLOAT:
+								sb.Append(floatVars[tokenList[x].literal]);
+								break;
+							case bType.CHAR:
+								sb.Append(charVars[tokenList[x].literal]);
+								break;
+							case bType.BOOL:
+								sb.Append(boolVars[tokenList[x].literal] ? "TRUE" : "FALSE");
+								break;
+						}
+						break;
+					default:
+						break;
+				}
+
+				x++;
+			}
+
+			y = x;
+
+			Console.Write(sb.ToString());
+		}
+
+		void checkOutput(int index)
+		{
+			int state = 0;
+			int x = index;
+
+			while(tokenList[x].lex != Lexeme.NEWLINE)
+			{
+				switch(tokenList[x].lex)
+				{
+					case Lexeme.OUTPUT:
+						state = outputDFA[state, 0];
+						break;
+					case Lexeme.COLON:
+						state = outputDFA[state, 1];
+						break;
+					case Lexeme.STRING:
+					case Lexeme.NUMBER:
+					case Lexeme.CHARACTER:
+					case Lexeme.BOOLEAN:
+					case Lexeme.IDENTIFIER:
+						state = outputDFA[state, 2];
+						break;
+					case Lexeme.AMP:
+						state = outputDFA[state, 3];
+						break;
+					default:
+						state = -1;
+						break;
+				}
+
+				if(state == -1)
+				{
+					throw new ErrorException($"Illegal {tokenList[x].lex} on line {tokenList[x].line}.");
+				}
+
+				x++;
 			}
 		}
 
@@ -833,7 +975,7 @@ namespace CPFL_Interpreter_Console
 					}
 					try
 					{
-						intVars[name] = Int32.Parse(tk.literal);
+						intVars[name] = Convert.ToInt32(Convert.ToSingle(tk.literal));
 					}
 					catch(FormatException)
 					{

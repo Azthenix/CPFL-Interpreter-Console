@@ -9,6 +9,7 @@ public enum Lexeme
     GREATER, LESSER, EQUAL, GEQUAL, LEQUAL, NEQUAL,
     ASSIGN,
     COMMA,
+    COLON,
     SHARP,
     NEWLINE,
 
