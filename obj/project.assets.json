@@ -8,28 +8,23 @@
     "net5.0": []
   },
   "packageFolders": {
-    "C:\\Users\\w\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\nekon\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\w\\Desktop\\CPFL-Interpreter-Console\\CPFL-Interpreter-Console.csproj",
+      "projectUniqueName": "C:\\Dev\\CSharp\\CPFL-Interpreter-Console\\CPFL-Interpreter-Console.csproj",
       "projectName": "CPFL-Interpreter-Console",
-      "projectPath": "C:\\Users\\w\\Desktop\\CPFL-Interpreter-Console\\CPFL-Interpreter-Console.csproj",
-      "packagesPath": "C:\\Users\\w\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\w\\Desktop\\CPFL-Interpreter-Console\\obj\\",
+      "projectPath": "C:\\Dev\\CSharp\\CPFL-Interpreter-Console\\CPFL-Interpreter-Console.csproj",
+      "packagesPath": "C:\\Users\\nekon\\.nuget\\packages\\",
+      "outputPath": "C:\\Dev\\CSharp\\CPFL-Interpreter-Console\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\w\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\nekon\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
@@ -37,6 +32,7 @@
         "net5.0"
       ],
       "sources": {
+        "C:\\Dev\\CSharp\\NuGets": {},
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
@@ -70,7 +66,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.406\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
       }
     }
   }

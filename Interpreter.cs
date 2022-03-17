@@ -1003,7 +1003,7 @@ namespace CPFL_Interpreter_Console
                                 sb.Append(charVars[tokenList[x].literal]);
                                 break;
                             case bType.BOOL:
-                                sb.Append(boolVars[tokenList[x].literal] ? "TRUE" : "FALSE");
+                                sb.Append(boolVars[tokenList[x].literal] ? "\"TRUE\"" : "\"FALSE\"");
                                 break;
                         }
                         break;
@@ -1193,127 +1193,116 @@ namespace CPFL_Interpreter_Console
             }
         }
 
-        void addInputToken(ref List<Token> inputList, string literal, int ctr)
-        {
+        // void addInputToken(ref List<Token> inputList, string literal, int ctr)
+        // {
 
-            if (reserved.Contains(literal))
-            {
-                if (literal == "TRUE" || literal == "FALSE")
-                {
-                    inputList.Add(new Token(Lexeme.BOOLEAN, literal, ctr));
-                }
-                else
-                {
-                    inputList.Add(new Token(Enum.Parse<Lexeme>(literal), null, ctr));
-                }
-                return;
-            }
-            if (Char.IsDigit(literal[0]))
-            {
-                if (!literal.All(x => Char.IsDigit(x) || x == '.'))
-                {
-                    throw new ErrorException($"Illegal Identifier '{literal}' on line {ctr}.");
-                }
+        //     if (reserved.Contains(literal))
+        //     {
+        //         if (literal == "TRUE" || literal == "FALSE")
+        //         {
+        //             inputList.Add(new Token(Lexeme.BOOLEAN, literal, ctr));
+        //         }
+        //         else
+        //         {
+        //             inputList.Add(new Token(Enum.Parse<Lexeme>(literal), null, ctr));
+        //         }
+        //         return;
+        //     }
+        //     if (Char.IsDigit(literal[0]))
+        //     {
+        //         if (!literal.All(x => Char.IsDigit(x) || x == '.'))
+        //         {
+        //             throw new ErrorException($"Illegal Identifier '{literal}' on line {ctr}.");
+        //         }
 
-                inputList.Add(new Token(Lexeme.NUMBER, literal, ctr));
-                return;
-            }
+        //         inputList.Add(new Token(Lexeme.NUMBER, literal, ctr));
+        //         return;
+        //     }
 
-            if (literal.Length == 1 && Char.IsLetter(literal[0]))
-            {
-                if (!literal.All(x => Char.IsLetter(x)))
-                {
-                    throw new ErrorException($"Illegal Identifier '{literal}' on line {ctr}.");
-                }
-                inputList.Add(new Token(Lexeme.CHARACTER, literal, ctr));
-                return;
-            }
+        //     if (literal.Length == 1 && Char.IsLetter(literal[0]))
+        //     {
+        //         if (!literal.All(x => Char.IsLetter(x)))
+        //         {
+        //             throw new ErrorException($"Illegal Identifier '{literal}' on line {ctr}.");
+        //         }
+        //         inputList.Add(new Token(Lexeme.CHARACTER, literal, ctr));
+        //         return;
+        //     }
 
-            if (Char.IsLetter(literal[0]) || literal[0] == '_')
-            {
-                if (!literal.All(x => Char.IsLetterOrDigit(x) || x == '_'))
-                {
-                    throw new ErrorException($"Illegal Identifier '{literal}' on line {ctr}.");
-                }
-                inputList.Add(new Token(Lexeme.IDENTIFIER, literal, ctr));
-                return;
-            }
+        //     if (Char.IsLetter(literal[0]) || literal[0] == '_')
+        //     {
+        //         if (!literal.All(x => Char.IsLetterOrDigit(x) || x == '_'))
+        //         {
+        //             throw new ErrorException($"Illegal Identifier '{literal}' on line {ctr}.");
+        //         }
+        //         inputList.Add(new Token(Lexeme.IDENTIFIER, literal, ctr));
+        //         return;
+        //     }
 
-            throw new ErrorException($"Illegal Identifier '{literal}' on line {ctr}.");
-        }
+        //     throw new ErrorException($"Illegal Identifier '{literal}' on line {ctr}.");
+        // }
 
-        void inputAssign(string name, Token tk, int i)
-        {
-            bType t = variables[name];
+        // void inputAssign(string name, Token tk, int i)
+        // {
+        //     bType t = variables[name];
 
-            switch (t)
-            {
-                case bType.INT:
-                    if (tk.lex != Lexeme.NUMBER)
-                    {
-                        throw new ErrorException($"Cannot assign '{tk.lex}' to a variable of type INT.");
-                    }
-                    try
-                    {
-                        intVars[name] = Convert.ToInt32(Convert.ToSingle(tk.literal));
-                    }
-                    catch (FormatException)
-                    {
-                        throw new ErrorException($"Cannot assign '{tk.literal}' to type INT.");
-                    }
-                    break;
-                case bType.FLOAT:
-                    if (tk.lex != Lexeme.NUMBER)
-                    {
-                        throw new ErrorException($"Cannot assign '{tk.lex}' to a variable of type FLOAT.");
-                    }
-                    floatVars[name] = float.Parse(tk.literal);
-                    break;
-                case bType.CHAR:
-                    if (tk.lex != Lexeme.CHARACTER)
-                    {
-                        throw new ErrorException($"Cannot assign '{tk.lex}' to a variable of type CHAR.");
-                    }
-                    charVars[name] = char.Parse(tk.literal);
-                    break;
-                case bType.BOOL:
-                    if (tk.lex != Lexeme.BOOLEAN)
-                    {
-                        throw new ErrorException($"Cannot assign '{tk.lex}' to a variable of type BOOL.");
-                    }
-                    boolVars[name] = tk.literal == "TRUE" ? true : false;
-                    break;
-            }
+        //     switch (t)
+        //     {
+        //         case bType.INT:
+        //             if (tk.lex != Lexeme.NUMBER)
+        //             {
+        //                 throw new ErrorException($"Cannot assign '{tk.lex}' to a variable of type INT.");
+        //             }
+        //             try
+        //             {
+        //                 intVars[name] = Convert.ToInt32(Convert.ToSingle(tk.literal));
+        //             }
+        //             catch (FormatException)
+        //             {
+        //                 throw new ErrorException($"Cannot assign '{tk.literal}' to type INT.");
+        //             }
+        //             break;
+        //         case bType.FLOAT:
+        //             if (tk.lex != Lexeme.NUMBER)
+        //             {
+        //                 throw new ErrorException($"Cannot assign '{tk.lex}' to a variable of type FLOAT.");
+        //             }
+        //             floatVars[name] = float.Parse(tk.literal);
+        //             break;
+        //         case bType.CHAR:
+        //             if (tk.lex != Lexeme.CHARACTER)
+        //             {
+        //                 throw new ErrorException($"Cannot assign '{tk.lex}' to a variable of type CHAR.");
+        //             }
+        //             charVars[name] = char.Parse(tk.literal);
+        //             break;
+        //         case bType.BOOL:
+        //             if (tk.lex != Lexeme.BOOLEAN)
+        //             {
+        //                 throw new ErrorException($"Cannot assign '{tk.lex}' to a variable of type BOOL.");
+        //             }
+        //             boolVars[name] = tk.literal == "TRUE" ? true : false;
+        //             break;
+        //     }
 
-        }
+        // }
+
         void Input(int index, ref int y)
         {
             int x = index + 2;
-            int ctr = 0;
-            string[] inputList;
-            List<Token> inputValue = new List<Token>();
+            List<string> inputList;
+			List<string> identifiers = new List<string>();
 
             string input = Console.ReadLine();
-            inputList = input.Split(',');
-
-
-            foreach (string str in inputList)
-            {
-                string trimmed = str.Trim(' ', '\'', '\"');
-                addInputToken(ref inputValue, trimmed, 0);
-            }
+            inputList = input.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
 
             while (tokenList[x].lex != Lexeme.NEWLINE)
             {
-
                 switch (tokenList[x].lex)
                 {
                     case Lexeme.IDENTIFIER:
-                        {
-                            inputAssign(tokenList[x].literal.ToString(), inputValue[ctr], 0);
-                            ctr++;
-                            break;
-                        }
+						identifiers.Add(tokenList[x].literal);
+						break;
                     case Lexeme.COMMA:
                         break;
 
@@ -1323,6 +1312,38 @@ namespace CPFL_Interpreter_Console
                 }
                 x++;
             }
+
+			if(identifiers.Count != inputList.Count)
+				throw new ErrorException($"Number of inputs({inputList.Count}) does not match up with number of variables({identifiers.Count}).");
+
+			var idenInp = identifiers.Zip(inputList, (iden, inp) => new {Iden = iden, Inp = inp});
+
+			foreach(var match in idenInp)
+			{
+				bType t = variables[match.Iden];
+				try
+				{
+					switch(t)
+					{
+						case bType.INT:
+							intVars[match.Iden] = Convert.ToInt32(Convert.ToSingle(match.Inp));
+							break;
+						case bType.FLOAT:
+							floatVars[match.Iden] = Convert.ToSingle(match.Inp);
+							break;
+						case bType.CHAR:
+							charVars[match.Iden] = Convert.ToChar(match.Inp);
+							break;
+						case bType.BOOL:
+							boolVars[match.Iden] = match.Inp == "\"TRUE\"" ? true : match.Inp == "\"FALSE\"" ? false : throw new FormatException();
+							break;
+					}
+				}
+				catch(FormatException)
+				{
+					throw new ErrorException($"Cannot assign '{match.Inp}' to type {t}.");
+				}
+			}
 
             y = x;
         }

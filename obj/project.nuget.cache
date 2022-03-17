@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dahBl9iOtj9PPjfTJ2TgY2iELsY4/kynkg3X+sf3N4OGvGjkaETO+0wr80SHrvC8ShPK3b+8gNfL2wOhWv4L5Q==",
+  "dgSpecHash": "+ZTVJEszyDQ9I5834MFFeh6vq/HwFsy+L8hOGK2dhP2UB+KGaTxLcxEemlwxyt/uGB4A6Hi1t2IulRekQ+I6yA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\w\\Desktop\\CPFL-Interpreter-Console\\CPFL-Interpreter-Console.csproj",
+  "projectFilePath": "C:\\Dev\\CSharp\\CPFL-Interpreter-Console\\CPFL-Interpreter-Console.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
