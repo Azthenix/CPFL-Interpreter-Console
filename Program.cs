@@ -13,7 +13,14 @@ namespace CPFL_Interpreter_Console
 			// 	return;
 			// }
 			Interpreter inter = new Interpreter("test.cpfl");
-			inter.Run();
+			// try
+			// {
+				inter.Run();
+			// }
+			// catch(ErrorException e)
+			// {
+			// 	Console.WriteLine(e.Message);
+			// }
 			Console.ReadKey();
 		}
 	}

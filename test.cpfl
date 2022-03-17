@@ -1,8 +1,27 @@
-VAR res, x = 10, y = 20, z = 30 AS INT
+VAR a, res, x = 10, y = 20, z = 30 AS INT
 VAR result, f = 1.5 AS FLOAT
+VAR c, b AS CHAR
+VAR t, t2, t3 AS BOOL
+VAR i, j, k AS INT
 
 START
-    res = ( x + y) * z
-    result = (f * 10)
-    OUTPUT: res & "#" & result & "#"
+    i = 1
+
+    WHILE (i <= 5)
+    START
+        j = 1
+        WHILE (j <= i)
+        START
+            k = 1
+            WHILE(NOT k > j)
+            START
+                OUTPUT: j & " "
+                k = k + 1
+            STOP
+            j = j + 1
+        STOP
+        
+        OUTPUT: "#"
+        i = i + 1
+    STOP
 STOP
