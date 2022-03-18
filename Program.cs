@@ -24,6 +24,7 @@ namespace CPFL_Interpreter_Console
 			}
 
 			Console.WriteLine("\n\nProgram successfully exited code 0.");
+			Console.ReadKey();
 		}
 	}
 }
