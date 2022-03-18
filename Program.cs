@@ -13,15 +13,17 @@ namespace CPFL_Interpreter_Console
 			// 	return;
 			// }
 			Interpreter inter = new Interpreter("test.cpfl");
-			// try
-			// {
+			try
+			{
 				inter.Run();
-			// }
-			// catch(ErrorException e)
-			// {
-			// 	Console.WriteLine(e.Message);
-			// }
-			Console.ReadKey();
+			}
+			catch(ErrorException e)
+			{
+				Console.WriteLine("\n\n"+e.Message);
+				return;
+			}
+
+			Console.WriteLine("\n\nProgram successfully exited code 0.");
 		}
 	}
 }

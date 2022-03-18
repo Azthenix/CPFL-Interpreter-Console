@@ -1,7 +1,29 @@
-VAR abc, b, c AS INT
-VAR x, w_23='w' AS CHAR
-VAR t ="TRUE" AS BOOL
+VAR a, b, x, y AS INT
+
 START
-    INPUT: t, b
-    OUTPUT: t & " " & b
+    OUTPUT: "Input box size: "
+    INPUT: x, y
+    a = 1
+
+    WHILE(a <= y)
+    START
+        b = 1
+
+        WHILE(b <= x)
+        START
+            IF(a == 1 OR a == y OR b == 1 OR b == x)
+            START
+                OUTPUT: "* "
+            STOP
+            ELSE
+            START
+                OUTPUT: "  "
+            STOP
+            b+=1
+        STOP
+
+        OUTPUT: "#"
+
+        a += 1
+    STOP
 STOP

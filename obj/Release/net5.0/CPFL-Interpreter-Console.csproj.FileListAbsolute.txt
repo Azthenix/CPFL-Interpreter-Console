@@ -1,0 +1,16 @@
+C:\Dev\CSharp\CPFL-Interpreter-Console\bin\Release\net5.0\CPFL-Interpreter-Console.exe
+C:\Dev\CSharp\CPFL-Interpreter-Console\bin\Release\net5.0\CPFL-Interpreter-Console.deps.json
+C:\Dev\CSharp\CPFL-Interpreter-Console\bin\Release\net5.0\CPFL-Interpreter-Console.runtimeconfig.json
+C:\Dev\CSharp\CPFL-Interpreter-Console\bin\Release\net5.0\CPFL-Interpreter-Console.runtimeconfig.dev.json
+C:\Dev\CSharp\CPFL-Interpreter-Console\bin\Release\net5.0\CPFL-Interpreter-Console.dll
+C:\Dev\CSharp\CPFL-Interpreter-Console\bin\Release\net5.0\ref\CPFL-Interpreter-Console.dll
+C:\Dev\CSharp\CPFL-Interpreter-Console\bin\Release\net5.0\CPFL-Interpreter-Console.pdb
+C:\Dev\CSharp\CPFL-Interpreter-Console\obj\Release\net5.0\CPFL-Interpreter-Console.csproj.AssemblyReference.cache
+C:\Dev\CSharp\CPFL-Interpreter-Console\obj\Release\net5.0\CPFL-Interpreter-Console.GeneratedMSBuildEditorConfig.editorconfig
+C:\Dev\CSharp\CPFL-Interpreter-Console\obj\Release\net5.0\CPFL-Interpreter-Console.AssemblyInfoInputs.cache
+C:\Dev\CSharp\CPFL-Interpreter-Console\obj\Release\net5.0\CPFL-Interpreter-Console.AssemblyInfo.cs
+C:\Dev\CSharp\CPFL-Interpreter-Console\obj\Release\net5.0\CPFL-Interpreter-Console.csproj.CoreCompileInputs.cache
+C:\Dev\CSharp\CPFL-Interpreter-Console\obj\Release\net5.0\CPFL-Interpreter-Console.dll
+C:\Dev\CSharp\CPFL-Interpreter-Console\obj\Release\net5.0\ref\CPFL-Interpreter-Console.dll
+C:\Dev\CSharp\CPFL-Interpreter-Console\obj\Release\net5.0\CPFL-Interpreter-Console.pdb
+C:\Dev\CSharp\CPFL-Interpreter-Console\obj\Release\net5.0\CPFL-Interpreter-Console.genruntimeconfig.cache

@@ -1,0 +1,2 @@
+C:\Dev\CSharp\CPFL-Interpreter-Console\bin\Debug\net5.0\win-x64\publish\CPFL-Interpreter-Console.pdb
+C:\Dev\CSharp\CPFL-Interpreter-Console\bin\Debug\net5.0\win-x64\publish\CPFL-Interpreter-Console.exe

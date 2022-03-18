@@ -406,6 +406,10 @@ namespace CPFL_Interpreter_Console
                         Declare(x, ref x);
                         break;
                     case Lexeme.START:
+                        if(tokenList[x+1].lex != Lexeme.NEWLINE)
+                        {
+                            throw new ErrorException($"Illegal '{tks[x+1].lex}' on line {tks[x+1].line}.");
+                        }
                         x++;
                         executeBody(x, ref x, false);
                         break;
