@@ -1,29 +1,3 @@
-VAR a, b, x, y AS INT
-
-START
-    OUTPUT: "Input box size: "
-    INPUT: x, y
-    a = 1
-
-    WHILE(a <= y)
-    START
-        b = 1
-
-        WHILE(b <= x)
-        START
-            IF(a == 1 OR a == y OR b == 1 OR b == x)
-            START
-                OUTPUT: "* "
-            STOP
-            ELSE
-            START
-                OUTPUT: "  "
-            STOP
-            b+=1
-        STOP
-
-        OUTPUT: "#"
-
-        a += 1
-    STOP
+VAR WHILE AS INT
+START 
 STOP
