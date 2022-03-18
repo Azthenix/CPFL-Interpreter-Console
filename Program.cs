@@ -20,12 +20,12 @@ namespace CPFL_Interpreter_Console
 			catch(ErrorException e)
 			{
 				Console.WriteLine(e.Message+"\n\nProgram exited with code -1.");
-				Console.ReadLine();
+				Console.ReadKey();
 				return;
 			}
 
 			Console.WriteLine("\n\nProgram successfully exited code 0.");
-			Console.ReadLine();
+			Console.ReadKey();
 		}
 	}
 }

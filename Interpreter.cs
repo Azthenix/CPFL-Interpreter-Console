@@ -151,7 +151,7 @@ namespace CPFL_Interpreter_Console
 
                 for (int x = 0; x < ln.Length; x++)
                 {
-                    if (Char.IsLetterOrDigit(ln[x]) || ln[x] == '_' || ln[x] == '.')
+                    if (Char.IsLetterOrDigit(ln[x]) || ln[x] == '_' || ln[x] == '.' || ln[x] == '$')
                     {
                         lit.Append(ln[x]);
                     }
@@ -379,9 +379,9 @@ namespace CPFL_Interpreter_Console
                 tokenList.Add(new Token(Lexeme.NUMBER, literal, ctr));
                 return;
             }
-            if (Char.IsLetter(literal[0]) || literal[0] == '_')
+            if (Char.IsLetter(literal[0]) || literal[0] == '_' || literal[0] == '$')
             {
-                if (!literal.All(x => Char.IsLetterOrDigit(x) || x == '_'))
+                if (!literal.All(x => Char.IsLetterOrDigit(x) || x == '_' || literal[0] == '$'))
                 {
                     throw new ErrorException($"Illegal Identifier '{literal}' on line {ctr}.");
                 }
