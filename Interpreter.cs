@@ -10,7 +10,6 @@ namespace CPFL_Interpreter_Console
     class Interpreter
     {
         List<Token> tokenList;
-        List<string> tokenLiterals;
 
         int[,] DeclareDFA = new int[7, 7]{
             {1, -1, -1, -1, -1, -1, -1},
@@ -29,13 +28,13 @@ namespace CPFL_Interpreter_Console
             {-1, -1, -1, 2}
         };
 
-        int[,] checkNumAssDFA = new int[6, 6]{
-            {1, -1, -1, -1, -1, -1},
-            {-1, 2, -1, -1, -1, -1},
-            {3, -1, 5, 4, -1, -1},
-            {-1, 2, -1, -1, -1, 4},
-            {5, -1, 5, 4, -1, -1},
-            {-1, -1, -1, -1, 5, 4}
+        int[,] checkNumAssDFA = new int[6, 7]{
+            {1, -1, -1, -1, -1, -1, -1},
+            {-1, 2, 4, -1, -1, -1, -1},
+            {3, -1, -1, 5, 4, -1, -1},
+            {-1, 2, 4, -1, -1, -1, 4},
+            {5, -1, -1, 5, 4, -1, -1},
+            {-1, -1, -1, -1, -1, 5, 4}
         };
 
         int[,] checkCharAssDFA = new int[6, 3]{
@@ -66,6 +65,17 @@ namespace CPFL_Interpreter_Console
             {-1, -1, -1, 2},
         };
 
+		int[,] structureDFA = new int[8, 9]{
+            {1, -1, -1, -1, -1, -1, -1, -1, -1},
+            {-1, 2, -1, -1, -1, -1, -1, -1, -1},
+            {-1, 2, -1, 3, 5, -1, -1, -1, 2},
+            {-1, -1, 3, -1, -1, 4, 2, 2, -1},
+            {-1, 4, -1, 5, -1, -1, -1, -1, -1},
+            {-1, -1, 5, -1, -1, -1, 7, 6, -1},
+            {-1, 6, -1, 3, -1, -1, -1, -1, -1},
+            {-1, 7, -1, 3, 5, -1, -1, -1, 7},
+		};
+
 
         enum bType
         {
@@ -83,7 +93,7 @@ namespace CPFL_Interpreter_Console
 
         const string symbols = "()[]*/+-%&><>=,#:\"\'";
         List<string> symbolsArray = new List<string> { "(", ")", "[", "]", "*", "/", "+", "-", "%", "&", ">", "<", "==", ">=", "<=", "=", "," };
-        List<string> reserved = new List<string>{"INT", "CHAR", "BOOL", "FLOAT", "AND", "OR", "NOT", "WHILE", "TRUE", "FALSE",
+        List<string> reserved = new List<string>{"INT", "CHAR", "BOOL", "FLOAT", "AND", "OR", "NOT", "WHILE", "IF", "ELSE", "TRUE", "FALSE",
                                         "VAR", "AS", "START", "STOP", "OUTPUT", "INPUT"};
 
         string[] lines;
@@ -97,7 +107,6 @@ namespace CPFL_Interpreter_Console
             floatVars = new Dictionary<string, float>();
 
             tokenList = new List<Token>();
-            tokenLiterals = new List<string>();
 
             lines = File.ReadAllText(file)
             .Replace("\"TRUE\"", "TRUE")
@@ -162,58 +171,91 @@ namespace CPFL_Interpreter_Console
                                     tokenList.Add(new Token(Lexeme.RPAR, null, ctr));
                                     break;
                                 case '*':
-                                    tokenList.Add(new Token(Lexeme.AST, null, ctr));
+                                    if (x < ln.Length && ln[x + 1] == '=')
+                                    {
+                                        tokenList.Add(new Token(Lexeme.UAST, null, ctr));
+                                        x++;
+                                    }
+                                    else
+                                    {
+                                        tokenList.Add(new Token(Lexeme.AST, null, ctr));
+                                    }
                                     break;
                                 case '/':
-                                    tokenList.Add(new Token(Lexeme.FSLASH, null, ctr));
+                                    if (x < ln.Length && ln[x + 1] == '=')
+                                    {
+                                        tokenList.Add(new Token(Lexeme.UFSLASH, null, ctr));
+                                        x++;
+                                    }
+                                    else
+                                    {
+                                        tokenList.Add(new Token(Lexeme.FSLASH, null, ctr));
+                                    }
                                     break;
                                 case '+':
-                                    tokenList.Add(new Token(Lexeme.PLUS, null, ctr));
+                                    if (x < ln.Length && ln[x + 1] == '=')
+                                    {
+                                        tokenList.Add(new Token(Lexeme.UPLUS, null, ctr));
+                                        x++;
+                                    }
+                                    else
+                                    {
+                                        tokenList.Add(new Token(Lexeme.PLUS, null, ctr));
+                                    }
                                     break;
                                 case '-':
-                                    tokenList.Add(new Token(Lexeme.MINUS, null, ctr));
+                                    if (x < ln.Length && ln[x + 1] == '=')
+                                    {
+                                        tokenList.Add(new Token(Lexeme.UMINUS, null, ctr));
+                                        x++;
+                                    }
+                                    else
+                                    {
+                                        tokenList.Add(new Token(Lexeme.MINUS, null, ctr));
+                                    }
                                     break;
                                 case '%':
-                                    tokenList.Add(new Token(Lexeme.PERCENT, null, ctr));
+                                    if (x < ln.Length && ln[x + 1] == '=')
+                                    {
+                                        tokenList.Add(new Token(Lexeme.UPERCENT, null, ctr));
+                                        x++;
+                                    }
+                                    else
+                                    {
+                                        tokenList.Add(new Token(Lexeme.PERCENT, null, ctr));
+                                    }
                                     break;
                                 case '&':
                                     tokenList.Add(new Token(Lexeme.AMP, null, ctr));
                                     break;
                                 case '>':
-                                    tokenLiterals.Add(lit.ToString());
                                     if (x < ln.Length && ln[x + 1] == '=')
                                     {
                                         tokenList.Add(new Token(Lexeme.GEQUAL, null, ctr));
-                                        tokenLiterals.Add(">=");
                                         x++;
                                     }
                                     else
                                     {
                                         tokenList.Add(new Token(Lexeme.GREATER, null, ctr));
-                                        tokenLiterals.Add(">");
                                     }
                                     break;
                                 case '<':
-                                    tokenLiterals.Add(lit.ToString());
                                     if (x < ln.Length && ln[x + 1] == '=')
                                     {
                                         tokenList.Add(new Token(Lexeme.LEQUAL, null, ctr));
-                                        tokenLiterals.Add("<=");
                                         x++;
                                     }
                                     else if (x < ln.Length && ln[x + 1] == '>')
                                     {
                                         tokenList.Add(new Token(Lexeme.NEQUAL, null, ctr));
-                                        tokenLiterals.Add("<>");
+										x++;
                                     }
                                     else
                                     {
                                         tokenList.Add(new Token(Lexeme.LESSER, null, ctr));
-                                        tokenLiterals.Add("<");
                                     }
                                     break;
                                 case '=':
-                                    tokenLiterals.Add(lit.ToString());
                                     if (x < ln.Length && ln[x + 1] == '=')
                                     {
                                         tokenList.Add(new Token(Lexeme.EQUAL, null, ctr));
@@ -252,7 +294,7 @@ namespace CPFL_Interpreter_Console
                                     }
                                     lit.Clear();
                                     break;
-                                default:
+								case '\'':
                                     lit.Clear();
                                     try
                                     {
@@ -281,9 +323,11 @@ namespace CPFL_Interpreter_Console
                                     }
                                     catch (IndexOutOfRangeException)
                                     {
-                                        throw new ErrorException($"Missing ''' on line {ln[x + 1]}.");
+                                        throw new ErrorException($"Missing ''' on line {ln[x]}.");
                                     }
                                     break;
+                                default:
+									throw new ErrorException($"Unknown character '{ln[x]}' on line x.");
                             }
 
                             lit.Clear();
@@ -384,7 +428,7 @@ namespace CPFL_Interpreter_Console
                 switch (tokenList[x].lex)
                 {
                     case Lexeme.IDENTIFIER:
-                        if (tokenList[x + 1].lex != Lexeme.ASSIGN)
+                        if (tokenList[x + 1].lex != Lexeme.ASSIGN && (tokenList[x + 1].lex < Lexeme.UAST && tokenList[x + 1].lex > Lexeme.UPERCENT))
                         {
                             throw new ErrorException($"Illegal '{tokenList[x].literal}' on line {tokenList[x].line}.");
                         }
@@ -427,25 +471,57 @@ namespace CPFL_Interpreter_Console
                                 break;
                         }
                         break;
-                    case Lexeme.START:
-                        executeBody(x + 1, ref x, skip);
-                        break;
                     case Lexeme.WHILE:
+						checkStructure(x);
                         int loopIn = x;
                         bool loop = evaluateBool(x + 1, ref x);
-                        x += 1;
+						
+						while(tokenList[++x].lex == Lexeme.NEWLINE);
+
                         if (tokenList[x].lex == Lexeme.START)
                         {
-                            executeBody(x + 1, ref x, skip == loop);
+                            executeBody(x + 1, ref x, skip || !loop);
                         }
                         else
                         {
                             throw new ErrorException($"Illegal '{tokenList[x].lex}' on line {tokenList[x].line}.");
                         }
-                        if (!skip && loop)
+                        if (!(skip || !loop))
                         {
                             x = loopIn - 1;
                         }
+                        break;
+					case Lexeme.IF:
+						checkStructure(x);
+                        bool run = evaluateBool(x + 1, ref x);
+						
+						while(tokenList[++x].lex == Lexeme.NEWLINE);
+
+                        if (tokenList[x].lex == Lexeme.START)
+                        {
+                            executeBody(x + 1, ref x, skip || !run);
+                        }
+                        else
+                        {
+                            throw new ErrorException($"Illegal '{tokenList[x].lex}' on line {tokenList[x].line}.");
+                        }
+
+						while(tokenList[++x].lex == Lexeme.NEWLINE);
+						
+                        if (tokenList[x].lex == Lexeme.ELSE)
+                        {
+							while(tokenList[++x].lex == Lexeme.NEWLINE);
+							
+							if (tokenList[x].lex == Lexeme.START)
+							{
+								executeBody(x + 1, ref x, skip || run);
+							}
+							else
+							{
+								throw new ErrorException($"Illegal '{tokenList[x].lex}' on line {tokenList[x].line}.");
+							}
+                        }
+						x--;
                         break;
                     case Lexeme.STOP:
                         y = x + 1;
@@ -533,7 +609,7 @@ namespace CPFL_Interpreter_Console
 
             x += 2;
 
-            if (tokenList[x + 1].lex == Lexeme.ASSIGN)
+            if (tokenList[x + 1].lex == Lexeme.ASSIGN || (tokenList[x + 1].lex >= Lexeme.UAST && tokenList[x + 1].lex <= Lexeme.UPERCENT))
             {
                 if (tokenList[x].lex == Lexeme.IDENTIFIER)
                 {
@@ -558,6 +634,42 @@ namespace CPFL_Interpreter_Console
             }
 
             StringBuilder sb = new StringBuilder();
+
+			string value;
+
+			if(tokenList[index + 1].lex != Lexeme.ASSIGN)
+			{
+				switch (variables[tokenList[index].literal])
+				{
+					case bType.INT:
+						value = intVars[tokenList[index].literal].ToString();
+						break;
+					case bType.FLOAT:
+						value = floatVars[tokenList[index].literal].ToString();
+						break;
+					default:
+						throw new ErrorException($"Illegal IDENTIFIER '{tokenList[x].literal}' on line {tokenList[x].line}.");
+				}
+
+				switch(tokenList[index + 1].lex)
+				{
+					case Lexeme.UAST:
+						sb.Append($"{value} *");
+						break;
+					case Lexeme.UFSLASH:
+						sb.Append($"{value} /");
+						break;
+					case Lexeme.UPLUS:
+						sb.Append($"{value} +");
+						break;
+					case Lexeme.UMINUS:
+						sb.Append($"{value} -");
+						break;
+					case Lexeme.UPERCENT:
+						sb.Append($"{value} %");
+						break;
+				}
+			}
 
             while (tokenList[x].lex != Lexeme.NEWLINE)
             {
@@ -617,6 +729,8 @@ namespace CPFL_Interpreter_Console
 
             DataTable dt = new DataTable();
 
+			string equation = sb.ToString();
+
             res = Convert.ToSingle(dt.Compute(sb.ToString(), ""));
 
             switch (variables[tokenList[index].literal])
@@ -648,26 +762,33 @@ namespace CPFL_Interpreter_Console
                     case Lexeme.ASSIGN:
                         state = checkNumAssDFA[state, 1];
                         break;
-                    case Lexeme.NUMBER:
+                    case Lexeme.UAST:
+                    case Lexeme.UFSLASH:
+                    case Lexeme.UPLUS:
+                    case Lexeme.UMINUS:
+                    case Lexeme.UPERCENT:
                         state = checkNumAssDFA[state, 2];
+                        break;
+                    case Lexeme.NUMBER:
+                        state = checkNumAssDFA[state, 3];
                         break;
                     case Lexeme.LPAR:
                         pars++;
-                        state = checkNumAssDFA[state, 3];
+                        state = checkNumAssDFA[state, 4];
                         break;
                     case Lexeme.RPAR:
                         if (--pars < 0)
                         {
                             throw new ErrorException($"Illegal ')' on line {tokenList[x].line}.");
                         }
-                        state = checkNumAssDFA[state, 4];
+                        state = checkNumAssDFA[state, 5];
                         break;
                     case Lexeme.AST:
                     case Lexeme.FSLASH:
                     case Lexeme.PLUS:
                     case Lexeme.MINUS:
                     case Lexeme.PERCENT:
-                        state = checkNumAssDFA[state, 5];
+                        state = checkNumAssDFA[state, 6];
                         break;
                     default:
                         state = -1;
@@ -792,7 +913,6 @@ namespace CPFL_Interpreter_Console
         bool evaluateBool(int index, ref int y)
         {
             bool res;
-
             int x = index;
 
             List<string> eval = new List<string>();
@@ -877,6 +997,12 @@ namespace CPFL_Interpreter_Console
                         break;
                     case Lexeme.NOT:
                         eval.Add("NOT");
+                        break;
+                    case Lexeme.AND:
+                        eval.Add("AND");
+                        break;
+                    case Lexeme.OR:
+                        eval.Add("OR");
                         break;
                     default:
                         throw new ErrorException($"Illegal '{tokenList[x].lex}' on line {tokenList[x].line}.");
@@ -971,6 +1097,84 @@ namespace CPFL_Interpreter_Console
 
             return x;
         }
+
+		int checkStructure(int index)
+		{
+            int state = 0;
+            int x = index;
+            int pars = 0;
+
+            while (tokenList[x].lex != Lexeme.NEWLINE)
+            {
+                switch (tokenList[x].lex)
+                {
+					case Lexeme.WHILE:
+					case Lexeme.IF:
+                        state = structureDFA[state, 0];
+                        break;
+                    case Lexeme.LPAR:
+						pars++;
+                        state = structureDFA[state, 1];
+                        break;
+                    case Lexeme.RPAR:
+                        if (--pars < 0)
+                        {
+                            throw new ErrorException($"Illegal ')' on line {tokenList[x].line}.");
+                        }
+                        state = structureDFA[state, 2];
+                        break;
+                    case Lexeme.IDENTIFIER:
+                    case Lexeme.NUMBER:
+                    case Lexeme.CHARACTER:
+                    case Lexeme.STRING:
+                        state = structureDFA[state, 3];
+                        break;
+                    case Lexeme.BOOLEAN:
+                        state = structureDFA[state, 4];
+                        break;
+                    case Lexeme.AST:
+                    case Lexeme.FSLASH:
+                    case Lexeme.PLUS:
+                    case Lexeme.MINUS:
+                    case Lexeme.PERCENT:
+                        state = structureDFA[state, 5];
+                        break;
+                    case Lexeme.AND:
+                    case Lexeme.OR:
+                        state = structureDFA[state, 6];
+                        break;
+                    case Lexeme.GREATER:
+                    case Lexeme.LESSER:
+                    case Lexeme.EQUAL:
+                    case Lexeme.GEQUAL:
+                    case Lexeme.LEQUAL:
+                    case Lexeme.NEQUAL:
+                        state = structureDFA[state, 7];
+                        break;
+                    case Lexeme.NOT:
+                        state = structureDFA[state, 8];
+                        break;
+                    default:
+                        state = -1;
+                        break;
+                }
+
+                if (state == -1)
+                {
+                    throw new ErrorException($"Illegal {tokenList[x].lex} on line {tokenList[x].line}.");
+                }
+
+                x++;
+            }
+
+            if (pars != 0)
+                throw new ErrorException($"Unclosed '(' on line {tokenList[x].line}.");
+
+            if (state != 3 && state != 5)
+                throw new ErrorException($"Invalid assignment on line {tokenList[x].line}.");
+
+            return x;
+		}
 
         void Output(int index, ref int y)
         {
